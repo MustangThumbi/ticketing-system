@@ -1,32 +1,33 @@
 
   import React, { useState } from 'react';
-import './ClientLogin.css' 
-import { useStateValue } from "./StateProvider";
-import { auth, provider } from "./firebase";
-import { actionTypes } from "./reducer";
+import '../Styles/ClientLogin.css' 
+import { auth, provider } from "../Database/firebase";
+import {loggedIn} from '../Redux/reducers/userReducer'
+import { useDispatch } from 'react-redux';
 
-import { Redirect } from "react-router-dom";
 
 
 function ClientLogin() {
 
 // //\const navigate = useNavigate();
  // let navigate = useNavigate();
-const [{user}, dispatch] = useStateValue();
+// const [{user}, dispatch] = useStateValue();
+const dispatch =useDispatch()
 
 
-const signIn = () => {
-  auth
-    .signInWithPopup(provider)
-    .then((result) => {
-      dispatch({
-        type: actionTypes.SET_USER,
-        user: result.user,
-      });
-    })
 
-    .catch((error) => alert(error.messsage));
-};
+// const signIn = () => {
+//   auth
+//     .signInWithPopup(provider)
+//     .then((result) => {
+//       dispatch({
+//         type: user,
+//         user: result.user,
+//       });
+//     })
+
+//     .catch((error) => alert(error.messsage));
+// };
 
 
 
@@ -64,6 +65,10 @@ const signIn = () => {
             .catch(error => alert(error.message))
     }
 
+    const handleSubmit =(e) => {
+      e.preventDefault();
+      dispatch(loggedIn())
+    }
   return (
     <div className="login">
        <img
@@ -72,7 +77,7 @@ const signIn = () => {
     <h1> Welcome To Tickly</h1>
       <div className="login_container">
      <h1>Sign In</h1>
-        <form>
+        <form onSubmit={handleSubmit}>
            <h5>Email</h5>
        <input
              value={email}

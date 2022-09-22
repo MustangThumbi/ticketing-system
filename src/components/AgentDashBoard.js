@@ -1,6 +1,6 @@
 import React from 'react'
 import { Avatar } from "@mui/material";
-import "./AgentDashBoard.css"
+import "../Styles/AgentDashBoard.css"
 import { Link } from "react-router-dom";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
 
