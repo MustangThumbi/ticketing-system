@@ -40,20 +40,21 @@ const dispatch =useDispatch()
     const [password, setPassword] = useState('');
     const [openSignUp, setOpenSignUp]= useState("");
     const [open,setOpen]= useState(true)
-    // const login = e => {
-    //     e.preventDefault();
+    
+    const login = e => {
+        e.preventDefault();
 
-    //     auth
-    //         .signInWithEmailAndPassword(email, password)
-    //         .then(auth => {
-    //               // it successfully created a new user with email and password
+        auth
+            .signInWithEmailAndPassword(email, password)
+            .then(auth => {
+                  // it successfully created a new user with email and password
             
-    //               //  navigate("/homepage");
+                  //  navigate("/homepage");
                 
-    //         })
+            })
             
-    //         .catch(error => alert(error.message))
-    // }
+            .catch(error => alert(error.message))
+    }
 
     const register = e => {
         e.preventDefault();
@@ -88,12 +89,12 @@ const dispatch =useDispatch()
    </center>
    
 
-   <Input
+   {/* <Input
    placeholder="email"
    type="text"
    className='signup-input'
    value={email}
-   onChange={(e)=> setEmail(e.target.value)}/>
+   onChange={(e)=> setEmail(e.target.value)}/> */}
 
    <Input
    placeholder="password"
@@ -102,7 +103,7 @@ const dispatch =useDispatch()
     className='signup-input'
    onChange={(e)=> setPassword(e.target.value)}/>
    <Button className='signup-btn' type="submit" onClick={registerWithEmailAndPassword}>signup</Button>
-   <Button className='google' type="submit" onClick={Google}>Google</Button>
+   <Button className='google' type="submit" >Google</Button>
 </form>
 
   

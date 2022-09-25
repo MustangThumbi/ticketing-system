@@ -106,3 +106,26 @@ margin-left: -350px;
 .ticket_info1>h3{
 flex: 0.20;
 }
+.add_agent{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    /* border: 1px solid lightgray; */
+    border-bottom: 1px solid rgb(106, 105, 104)!important;;
+    border-top: 1px solid rgb(106, 105, 104)!important;;
+    border-right: 1px solid rgb(106, 105, 104)!important;
+    border-left: 1px solid rgb(106, 105, 104)!important; 
+    border-radius: 5px!important;
+  margin-right:750px;
+  padding-left: 20px;
+   
+}
+.Add_icon{
+  font-size: 100px;
+}
+.Add_icon:hover{
+    
+    color: #fff;
+    background-color: #000;
+
+}

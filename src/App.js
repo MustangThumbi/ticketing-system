@@ -7,6 +7,7 @@ import AgentDashBoard from './components/AgentDashBoard';
 import ClientTickets from './components/ClientTickets';
 import { useSelector } from 'react-redux';
 import Topbar from './components/Topbar';
+import SuperAgent from './components/SuperAgent';
 
 function App() {
   const isLoggedIn = useSelector(state =>state.user.loggedIn)
@@ -15,10 +16,12 @@ function App() {
     <div className="App">
       <BrowserRouter>
       <Topbar/>
+      
         <Routes>
           <Route path="/" element={<ClientLogin />}></Route>
           <Route path="/customer" element={<RaiseTicket />}></Route>
           <Route path="/agent" element={<AgentDashBoard/>}></Route>
+          <Route path="/superagent" element={<SuperAgent/>}></Route>
 
           <Route path="/customer/mytickets" element={<ClientTickets />}></Route>
         </Routes>
