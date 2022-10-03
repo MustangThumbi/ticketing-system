@@ -1,79 +1,111 @@
 
-  import React, { useState } from 'react';
+  import React, { useEffect, useState } from 'react';
 import '../Styles/ClientLogin.css' 
-import { auth, Google, provider, registerWithEmailAndPassword } from "../Database/firebase";
+import { auth, db, Google, provider, registerWithEmailAndPassword } from "../Database/firebase";
 // import {loggedIn} from '../Redux/reducers/userReducer'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addDoc,collection } from "firebase/firestore";
 import { Button, Input, Modal } from '@mui/material';
+import { getAuth,signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { logInWithEmailAndPassword } from '../Database/firebase';
-import { userActions } from '../Redux/actions/userSlice';
+import { selectUser, setActiveUser, setUserLogOutState } from '../Redux/reducers/userSlice';
 
 
 
 function ClientLogin() {
+  const [openSignUp, setOpenSignUp]= useState("");
+  const [password,setPassword]=useState("");
+ 
+  const [email, setEmail] = useState("");
+  const [username,setUsername]=useState("");
+  const dispatch = useDispatch();
+ 
+  // const setUsername =dispatch(setActiveUser);
+  // const userEmail= useSelector(selectUserEmail)
+  const user= useSelector(selectUser)
 
-// //\const navigate = useNavigate();
- // let navigate = useNavigate();
-// const [{user}, dispatch] = useStateValue();
-const dispatch =useDispatch()
+//signing in function
+const signIn= async(event)=>{
+  event.preventDefault();
 
-
-
-// const signIn = () => {
-//   auth
-//     .signInWithPopup(provider)
-//     .then((result) => {
-//       dispatch({
-//         type: user,
-//         user: result.user,
-//       });
-//     })
-
-//     .catch((error) => alert(error.messsage));
-// };
-
-
-
-
-// const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [openSignUp, setOpenSignUp]= useState("");
-    const [open,setOpen]= useState(true)
+   try {
+    await signInWithEmailAndPassword(auth, email, password).then
+    ((result)=>{
+      dispatch(setActiveUser({
+        userEmail:result.user.email,
+        userName:result.user.displayName,
+      }))
+    });
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
     
-    const login = e => {
-        e.preventDefault();
+};
+    //signup function
+  const signup=async(event)=>{
+    event.preventDefault();
 
-        auth
-            .signInWithEmailAndPassword(email, password)
-            .then(auth => {
-                  // it successfully created a new user with email and password
-            
-                  //  navigate("/homepage");
-                
-            })
-            
-            .catch(error => alert(error.message))
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password)
+      await updateProfile(auth.currentUser, {displayName:username})
+      const user = res.user;
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        username:user.displayName,
+        authProvider: "local",
+        email,
+
+
+        
+      })
+     
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
     }
+      setOpenSignUp(false);
+      setUsername("")
+  };
 
-    const register = e => {
-        e.preventDefault();
-
-        auth
-            .createUserWithEmailAndPassword(email, password)
-            .then((auth) => {
-                // it successfully created a new user with email and password
-                if (auth) {
-                     
-                }
-            })
-            .catch(error => alert(error.message))
+  //fires to check if signed in or not
+  useEffect(()=>{
+    
+   
+    const unsubscribe=auth.onAuthStateChanged((authUser)=>{
+      if(authUser){
+        console.log(authUser);
+        dispatch(setActiveUser({ 
+          userName:authUser.displayName,
+          userEmail:authUser.email,
+        })
+        );
+       
+   
+      }else{
+        dispatch(setUserLogOutState())
+      }
+    })
+    
+    return()=>{
+      unsubscribe();
+      
+     
     }
-
-    const handleSubmit =(e) => {
-      e.preventDefault();
-      dispatch(userActions.loggedIn())
+   },[dispatch]);
+   
+   
+   
+  
+   
+   
+    const handleSub =(e)=>{
+     e.preventDefault();
+     dispatch(selectUser)
+   
     }
+    
+
   return (
     <div className="login">
        <Modal
@@ -88,13 +120,19 @@ const dispatch =useDispatch()
     <img className='signup-logo' src=" https://avatars.dicebear.com/api/human/:matiru5810.svg"/>
    </center>
    
+   <Input
+   placeholder="username"
+   type="text"
+   className='signup-input'
+   value={username}
+   onChange={(e)=> setUsername(e.target.value)}/>
 
-   {/* <Input
+   <Input
    placeholder="email"
    type="text"
    className='signup-input'
    value={email}
-   onChange={(e)=> setEmail(e.target.value)}/> */}
+   onChange={(e)=> setEmail(e.target.value)}/>
 
    <Input
    placeholder="password"
@@ -102,7 +140,7 @@ const dispatch =useDispatch()
    value={password}
     className='signup-input'
    onChange={(e)=> setPassword(e.target.value)}/>
-   <Button className='signup-btn' type="submit" onClick={registerWithEmailAndPassword}>signup</Button>
+   <Button className='signup-btn' type="submit" onClick={signup}>signup</Button>
    <Button className='google' type="submit" >Google</Button>
 </form>
 
@@ -115,7 +153,7 @@ const dispatch =useDispatch()
     <h1> Welcome To Tickly</h1>
       <div className="login_container">
      <h1>Sign In</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSub}>
            <h5>Email</h5>
        <input
              value={email}
@@ -131,7 +169,7 @@ const dispatch =useDispatch()
           />
         
           <button 
-          onClick={logInWithEmailAndPassword}
+          onClick={signIn}
            type="submit" className="login_signIn_button">
         Sign In
           </button>
@@ -144,7 +182,7 @@ const dispatch =useDispatch()
          className="login_signUp_button">
           create your Tickly Account 
         </button>
-        
+        {/* testing and stuff */}
       </div>
     </div>
   );

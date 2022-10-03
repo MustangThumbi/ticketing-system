@@ -8,23 +8,34 @@ import ClientTickets from './components/ClientTickets';
 import { useSelector } from 'react-redux';
 import Topbar from './components/Topbar';
 import SuperAgent from './components/SuperAgent';
+import { Switch } from '@mui/material';
+import { selectUser } from './Redux/reducers/userSlice';
 
 function App() {
-  const isLoggedIn = useSelector(state =>state.user.loggedIn)
-  console.log(isLoggedIn)
+ 
+  const user= useSelector(selectUser)
   return (
     <div className="App">
       <BrowserRouter>
-      <Topbar/>
-      
-        <Routes>
-          <Route path="/" element={<ClientLogin />}></Route>
-          <Route path="/customer" element={<RaiseTicket />}></Route>
+       
+    
+          {!user ?(
+            <ClientLogin />
+          ):(
+           
+           
+             < Routes> 
           <Route path="/agent" element={<AgentDashBoard/>}></Route>
+          <Route exact path="/" element={<RaiseTicket />}> </Route>
           <Route path="/superagent" element={<SuperAgent/>}></Route>
+         
+       
+           </Routes>
+          )}
+          
+          
 
-          <Route path="/customer/mytickets" element={<ClientTickets />}></Route>
-        </Routes>
+        
       </BrowserRouter>
     </div>
   );

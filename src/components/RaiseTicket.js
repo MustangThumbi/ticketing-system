@@ -1,11 +1,45 @@
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 import "../Styles/RaiseTicket.css"
 import {  IconButton } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+// import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import {db} from '../Database/firebase';
+import { addDoc, collection, doc, getDocs, serverTimestamp } from 'firebase/firestore';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTicketAction } from '../Redux/actions/ticketAction';
+import { selectUser, setActiveUser } from '../Redux/reducers/userSlice';
 
 function RaiseTicket() {
+  const[ticket,setTicket]=useState('')
+  const[subject,setSubject]=useState('')
+  const[description,setDescription]=useState('')
+    
+  
+    const dispatch =  useDispatch();
+
+const user = useSelector(selectUser);
+const userName= dispatch(setActiveUser({username:user.username}))
+
+
+    const addTicket= async()=>{
+      dispatch(addTicketAction({
+        subject,description,user,createdAt:serverTimestamp()
+      }))
+      setSubject('')
+      setDescription('')
+      setTicket('')
+    };
+
+    const createticket= async()=>{
+     const ticketRef= await addDoc(collection(db, "tickets"), {
+        username:userName,subject:subject,description:description,createdAt:serverTimestamp()
+      });
+    }
+  
+
+
   return (
     <div className="raiseticket">
       <div className="raiseticket_header">
@@ -40,17 +74,29 @@ function RaiseTicket() {
             <form>
               <div className="ticket_subject">
                 <h5>subject: </h5>
-                <input />
+                <input
+              type="text"
+              placeholder="subject"
+              value={subject}
+              onChange={(e)=>setSubject(e.target.value)}/>
               </div>
               <div className="ticket_description">
                 <h5>description: </h5>
-                <input />
+                <textarea
+                className="ticket_description_textarea"
+                type="text"
+                placeholder="description"
+                value={description}
+                onChange={(e)=>setDescription(e.target.value)}>
+                </textarea>
+
+                
               </div>
               <div className="wrap_buttons">
-                <button type="submit" className="ticket_submit_button">
+                <button type="submit" onClick={createticket} className="ticket_submit_button">
                   submit
                 </button>
-
+,
                 <button type="submit" className="ticket_cancel_button">
                   cancel
                 </button>
@@ -62,5 +108,4 @@ function RaiseTicket() {
     </div>
   );
 }
-
 export default RaiseTicket

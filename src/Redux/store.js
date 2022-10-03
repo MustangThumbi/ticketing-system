@@ -1,9 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { userSlice } from './actions/userSlice'
+import { combineReducers,createStore } from '@reduxjs/toolkit'
+import { composeWithDevTools } from 'redux-devtools-extension';
+import ticketsReducer from './reducers/ticketSlice';
 
+import userReducer from './reducers/userSlice'
 
-export default configureStore({
-  reducer: {
-    user:userSlice.reducer,
-  },
+const rootReducer = combineReducers({
+  
+   user: userReducer,
+   tickets: ticketsReducer,
+
 })
+
+
+const store = createStore(rootReducer,composeWithDevTools())
+
+export default store;

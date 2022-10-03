@@ -107,7 +107,7 @@ border-right: 1px solid rgb(106, 105, 104)!important;
 border-left: 1px solid rgb(106, 105, 104)!important; 
 border-radius: 2px;
 }
-.ticket_description>input{
+.ticket_description>textarea{
  height: 200px;
  margin-bottom: 10px;
  background-color:antiquewhite;
@@ -149,6 +149,7 @@ background-color: gold;
  margin-right: 40px;
 
 }
+
 .ticket_cancel_button{
 border-radius: 2px;
  width: 20%;
@@ -160,16 +161,30 @@ border-radius: 2px;
 }
 .ticket_subject{
     display: flex;
+    width: 780px;
     margin-left:50px;
     margin-bottom: 20px;
     align-items: center;
 }
 .ticket_description{
 display: flex;
+
 margin-left:50px;
 margin-bottom: 20px;
+
+align-items: center;
+
+}
+.ticket_description_textarea{
+    display: block;
+    width: 600px;
+height: 200px;
+margin-left:50px;
+margin-bottom: 20px;
+
 align-items: center;
 }
+
 
 .wrap_buttons{
 display: flex;
